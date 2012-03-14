@@ -16,29 +16,8 @@
         <!-- allow user-specific overrides -->
         <property file="build.user.properties"/>
         <property file="build.properties"/>
-        <taskdef name="jshint" classname="com.philmander.ant.jshint.JsHintAntTask"
-            classpath="${file.jshint_anttask.jar}" />
-
     </target>
-
-    <!-- JSHint -->
-  	<target name="jshint" depends="properties, create_build">
-        <echo>Checking syntax...</echo>
-        <jshint dir="${dir.build.current}" includes="**/*.js" />
-        <echo>Finished</echo>
-  	</target>
-
-    <!-- SPECS -->
-    <target name="specs" depends="properties">
-        <echo>Running specs...</echo>
-        <exec executable="phantomjs" dir="${basedir}" failonerror="true" resultproperty="specs.results">
-            <arg line="'${file.jasmine-runner.js}'" />
-            <arg line="'${file.specs-runner.html}'" />
-            <arg line="${timeout.specs}" />
-        </exec>
-        <echo>Finished.</echo>
-    </target>
-
+    
     <!-- CREATE BUILD -->
 
     <target name="create_build" depends="properties">
@@ -62,13 +41,36 @@
         <echo>Finished.</echo>
     </target>
 
+    <!-- JSHint -->
+  	<target name="jshint" depends="properties, consolidate">
+        <echo>Checking syntax...</echo>
+          <exec executable="phantomjs" dir="${basedir}" failonerror="true" resultproperty="specs.results">
+              <arg line="'${file.jshint-runner.js}'" />
+              <arg line="'${file.jshint.js}'" />
+              <arg line="'${file.consolidated.js}'" />
+              <arg line="${timeout.phantom}" />
+          </exec>
+        <echo>Finished</echo>
+  	</target>
+
+    <!-- SPECS -->
+    <target name="specs" depends="properties">
+        <echo>Running specs...</echo>
+        <exec executable="phantomjs" dir="${basedir}" failonerror="true" resultproperty="specs.results">
+            <arg line="'${file.jasmine-runner.js}'" />
+            <arg line="'${file.specs-runner.html}'" />
+            <arg line="${timeout.phantom}" />
+        </exec>
+        <echo>Finished.</echo>
+    </target>
+
+
     <!-- MINIFY -->
     <target name="minify" depends="properties,create_build, consolidate">
         <echo>Minifying...</echo>
         <exec executable="java" dir="${basedir}" failonerror="true">
             <arg line="-jar '${file.yui_compressor.jar}'" />
             <arg line="--type js" />
-            <arg line="-v" />
             <arg line="-o '${file.minified.js}'" />
             <arg line="'${file.consolidated.js}'" />
         </exec>
