@@ -1,4 +1,4 @@
-# EXAMPLE OF AUTOMATED BUILDING FOR SMALL JAVASCRIPT PROJECTS
+# AUTOMATING JAVASCRIPT BUILD
 
-See XXX for full explanation
+See http://creynders.wordpress.com/2012/03/14/automating-javascript-builds/ for full explanation
 
